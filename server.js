@@ -4,8 +4,10 @@ const MongoClient = require('mongodb').MongoClient;
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
-const express = require('express');
 const { ObjectId } = require('mongodb');
+const util = require('util');
+const crypto = require('crypto');
+const express = require('express');
 const app = express();
 
 app.use(helmet());
@@ -23,21 +25,46 @@ function areYouIn205(req,res,next) {
     }
 }
 
+const randomBytesPromise = util.promisify(crypto.randomBytes);
+const pbkdf2Promise = util.promisify(crypto.pbkdf2);
+
+const createSalt = async () => {
+    const buffer = await randomBytesPromise(64);
+  
+    return buffer.toString("base64");
+}
+const createHashedPassword = async (pw) => {
+    const salt = await createSalt();
+    const key = await pbkdf2Promise(pw, salt, process.env.CRYPTO_CODE, 64, "sha512");
+    const hashedPassword = key.toString("base64");
+  
+    return { hashedPassword, salt };
+}
+const verifyPassword = async (pw, userSalt, userPassWord) => {
+    const key = await pbkdf2Promise(pw, userSalt, process.env.CRYPTO_CODE, 64, "sha512");
+    const hashedPassword = key.toString("base64");
+  
+    return hashedPassword === userPassWord;
+}
+
 passport.use(new LocalStrategy({
     usernameField: 'name',
     passwordField: 'studentId',
     session: true,
     passReqToCallback: false,
-}, function (InputName, InputStudentId, done) {
-    db.collection('login').findOne({ name: InputName }, function (err, result) {
-      if (err) return done(err)
-      if (!result) return done(null, false, { message: '존재하지않는 이름이요' })
-      if (InputStudentId == result.studentId) {
-        return done(null, result)
-      } else {
-        return done(null, false, { message: '학번 틀렸어요' })
-      }
-    })
+}, async (InputName, InputStudentId, done) => {
+    try {
+        db.collection('login').findOne({ name: InputName }, function (err, result) {
+            if (err) return done(err)
+            if (!result) return done(null, false, { message: '존재하지 않는 이름이래요' })
+            verifyPassword(InputStudentId, result.salt, result.studentId).then((verified) => {
+                if(!verified) return done(null, false, {message: '학번 틀렸어요'})
+                else return done(null, result);
+            });
+        })
+    } catch(err) {
+        console.log(err);
+    }
 }));
 passport.serializeUser(function (user, done) {
     done(null, user.name);
@@ -129,8 +156,30 @@ app.put('/list/answer/false/:id', (req,res) => {
 })
 
 app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}) ,function(req, res) {
-    res.redirect('/');
+    res.redirect('/quiz_member');
 });
+
+app.post('/register', (req,res) => {
+    var createdSalt, createdId;
+    var doublecheck = false;
+    createHashedPassword(req.body.studentId).then((result) => {
+        createdSalt = result.salt;
+        createdId = result.hashedPassword;
+        db.collection('user').find.toArray((err,result) => {
+            result.map((a,i) => {
+                if(result.studentId == req.body.studentId) {
+                    doublecheck = true;
+                    return res.send("<script>alert('이미 사용중인 학번입니다! 관리자에게 연락해주세요!');  window.location.replace('/register'); </script>");
+                }
+            })
+            if(!doublecheck) {
+                db.collection('user').insertOne({name: req.body.name, studentId: createdId, salt: createdSalt, num: 0, answer: ''}, (err,result) => {
+                    res.redirect('/quiz_member');
+                })
+            }
+        })
+    })
+})
 
 app.get('*', (req,res) => {
     res.send('404 Not Found');
