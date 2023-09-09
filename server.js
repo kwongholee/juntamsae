@@ -7,6 +7,7 @@ const session = require('express-session');
 const { ObjectId } = require('mongodb');
 const util = require('util');
 const crypto = require('crypto');
+const methodOverride = require('method-override');
 const express = require('express');
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(session({secret: process.env.SECRET_CODE, resave: true, saveUninitialize
 app.use(express.urlencoded({extended: true}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride('_method'));
 
 function areYouIn205(req,res,next) {
     const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
@@ -117,7 +119,7 @@ app.get('/login', (req,res) => {
 
 app.get('/quiz/member', (req,res) => {
     db.collection('quiz').findOne({name: 'quiz'}, (err,result) => {
-        res.render('quiz_member.ejs', {result: result});
+        res.render('quiz_member.ejs', {result: result, user: req.user});
     })
 })
 
