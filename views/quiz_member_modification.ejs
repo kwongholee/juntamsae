@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUNTAMSAE</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+  <h1>Quiz for Member</h1>
+
+  <div>
+    <h2>Quiz: <%= result.quiz %></h2>
+  </div>
+
+  <div>
+    <form action="/quiz/member/answer/<%= user._id %>?_method=PUT" method="POST">
+      <label>Answer</label>
+      <input type="text" value="<%= user.answer %>" name="answer">
+      <button type="submit">제출</button>
+    </form>
+  </div>
+</body>
+</html>
