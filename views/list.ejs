@@ -28,16 +28,16 @@
           <h3>Name: <%= result[i].name %></h3>
           <h3>Number of Attendance: <%= result[i].num %></h3>
           <h3>Answer of last Quiz: <%= result[i].answer %></h3>
-          <button id="plus" data-id="<%= result[i]._id %>" class="btn btn-primary">+</button>
-          <button id="minus" data-id="<%= result[i]._id %>" class="btn btn-danger">-</button>
-          <button id="delete" data-id="<%= result[i]._id %>" class="btn btn-secondary">삭제</button>
+          <button data-id="<%= result[i]._id %>" class="plus btn btn-primary">+</button>
+          <button data-id="<%= result[i]._id %>" class="minus btn btn-danger">-</button>
+          <button data-id="<%= result[i]._id %>" class="delete btn btn-secondary">삭제</button>
         </div>
       <% } %>
     </div>
   </div>
 
   <script>
-    document.querySelector('#plus').addEventListener('click', (e) => {
+    $('.plus').click((e) => {
       fetch('/list/answer/true/' + e.target.dataset.id, {
         method: 'PUT',
       })
@@ -49,7 +49,7 @@
       })
     })
 
-    document.querySelector('#minus').addEventListener('click', (e) => {
+    $('.minus').click((e) => {
       fetch('/list/answer/false/' + e.target.dataset.id, {
         method: 'PUT',
       })
@@ -61,7 +61,7 @@
       })
     })
 
-    document.querySelector('#delete').addEventListener('click', (e) => {
+    $('.delete').click((e) => {
       fetch('/list/elimination/' + e.target.dataset.id, {method: 'DELETE'})
       .then(() => {
         location.reload();
@@ -78,33 +78,15 @@
     })
 
     document.querySelector('#register').addEventListener('click', () => {
-      fetch('/list/register')
-      .then(() => {
-        window.location.replace('/list/register')
-      })
-      .catch((a,b,c) => {
-        console.log(a,b,c);
-      })
+      window.location.replace('/list/register')
     })
 
     document.querySelector('#name').addEventListener('click', () => {
-      fetch('/list/name')
-      .then(() => {
-        window.location.replace('/list/name')
-      })
-      .catch((a,b,c) => {
-        console.log(a,b,c);
-      })
+      window.location.replace('/list/name');
     })
 
     document.querySelector('#attendance').addEventListener('click', () => {
-      fetch('/list/attendance')
-      .then(() => {
-        window.location.replace('/list/attendance')
-      })
-      .catch((a,b,c) => {
-        console.log(a,b,c);
-      })
+      window.location.replace('/list/attendance')
     })
   </script>
 </body>
