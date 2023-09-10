@@ -180,6 +180,18 @@ app.put('/list/answer/false/:id', ManagerLogined, (req,res) => {
     })
 })
 
+app.delete('/list/elimination/:id', ManagerLogined, (req,res) => {
+    db.collection('user').deleteOne({_id: new ObjectId(req.params.id)}, (err,result) => {
+        res.status(200).send('delete member success');
+    })
+})
+
+app.delete('/list/elimination/all', (req,res) => {
+    db.collection('user').deleteMany({role: 'member'}, (err,result) => {
+        res.status(200).send('delete all member success');
+    })
+})
+
 app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}) ,function(req, res) {
     if(req.user.role === 'manager') {
         res.redirect('/quiz/manager');
@@ -196,7 +208,7 @@ app.post('/register', (req,res) => {
         createdId = result.hashedPassword;
         db.collection('user').find().toArray((err,result) => {
             result.map((a,i) => {
-                if(result.studentId == req.body.studentId) {
+                if(result.studentId == createdId) {
                     doublecheck = true;
                     return res.send("<script>alert('이미 사용중인 학번입니다! 관리자에게 연락해주세요!');  window.location.replace('/login'); </script>");
                 }

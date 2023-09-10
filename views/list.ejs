@@ -19,6 +19,10 @@
         <button id="attendance" class="btn btn-primary">출석 순 나열</button>
       </div>
 
+      <div>
+        <button id="deleteAll" class="btn btn-warning">모든 멤버 삭제</button>
+      </div>
+
       <% for(let i = 0; i < result.length; i++) { %>
         <div>
           <h3>Name: <%= result[i].name %></h3>
@@ -26,6 +30,7 @@
           <h3>Answer of last Quiz: <%= result[i].answer %></h3>
           <button id="plus" data-id="<%= result[i]._id %>" class="btn btn-primary">+</button>
           <button id="minus" data-id="<%= result[i]._id %>" class="btn btn-danger">-</button>
+          <button id="delete" data-id="<%= result[i]._id %>" class="btn btn-secondary">삭제</button>
         </div>
       <% } %>
     </div>
@@ -54,6 +59,22 @@
       .catch((a,b,c) => {
         console.log(a,b,c);
       })
+    })
+
+    document.querySelector('#delete').addEventListener('click', (e) => {
+      fetch('/list/elimination/' + e.target.dataset.id, {method: 'DELETE'})
+      .then(() => {
+        location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    })
+
+    document.querySelector('#deleteAll').addEventListener('click', () => {
+      fetch('/list/elimination/all', {method: 'DELETE'})
+      .then(() => {location.reload()})
+      .catch((err) => {console.log(err)})
     })
 
     document.querySelector('#register').addEventListener('click', () => {
