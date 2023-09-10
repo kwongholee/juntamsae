@@ -59,7 +59,7 @@
     document.querySelector('#register').addEventListener('click', () => {
       fetch('/list/register')
       .then(() => {
-        location.reload();
+        window.location.replace('/list/register')
       })
       .catch((a,b,c) => {
         console.log(a,b,c);
@@ -69,7 +69,7 @@
     document.querySelector('#name').addEventListener('click', () => {
       fetch('/list/name')
       .then(() => {
-        location.reload();
+        window.location.replace('/list/name')
       })
       .catch((a,b,c) => {
         console.log(a,b,c);
@@ -79,7 +79,7 @@
     document.querySelector('#attendance').addEventListener('click', () => {
       fetch('/list/attendance')
       .then(() => {
-        location.reload();
+        window.location.replace('/list/attendance')
       })
       .catch((a,b,c) => {
         console.log(a,b,c);
