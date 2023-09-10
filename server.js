@@ -108,6 +108,10 @@ app.get('/', (req,res) => {
     res.render('main.ejs');
 })
 
+app.get('/fail', (req,res) => {
+    res.render('fail.ejs');
+})
+
 app.get('/profile/:id', Logined, (req,res) => {
     db.collection('user').findOne({_id: new ObjectId(req.params.id)}, (err,result) => {
         res.render('profile.ejs', {user: result});
@@ -208,10 +212,12 @@ app.post('/register', (req,res) => {
         createdId = result.hashedPassword;
         db.collection('user').find().toArray((err,result) => {
             result.map((a,i) => {
-                if(result.studentId == createdId) {
-                    doublecheck = true;
-                    return res.send("<script>alert('이미 사용중인 학번입니다! 관리자에게 연락해주세요!');  window.location.replace('/login'); </script>");
-                }
+                verifyPassword(req.body.studentId, result.salt, result.studentId).then((verified) => {
+                    if(!verified) {
+                        doublecheck = true;
+                        return res.send("<script>alert('이미 사용중인 학번입니다! 관리자에게 연락해주세요!');  window.location.replace('/fail'); </script>");
+                    }
+                })
             })
             if(!doublecheck) {
                 db.collection('user').insertOne({name: req.body.name, studentId: createdId, salt: createdSalt, num: 0, answer: '', role: 'member'}, (err,result) => {
