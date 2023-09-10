@@ -18,6 +18,8 @@ app.use(methodOverride('_method'));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
+import isStudentId from './middleware/loginRegex';
+
 var db;
 
 MongoClient.connect(process.env.DB_URL, (err, client) => {
@@ -205,18 +207,18 @@ app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}) ,fu
 });
 
 app.post('/register', (req,res) => {
-    var createdSalt, createdId;
-    var doublecheck = false;
-    createHashedPassword(req.body.studentId).then((result) => {
-        createdSalt = result.salt;
-        createdId = result.hashedPassword;
-        if(!doublecheck) {
+    if(!isStudentId(req.body.studentId)) {
+        return res.send('<script>alert("경희대학교 학번이 아닙니다! 학번을 제대로 입력해주세요!"); window.location.replace("/login"); </script>')
+    } else {
+        var createdSalt, createdId;
+        createHashedPassword(req.body.studentId).then((result) => {
+            createdSalt = result.salt;
+            createdId = result.hashedPassword;
             db.collection('user').insertOne({name: req.body.name, studentId: createdId, salt: createdSalt, num: 0, answer: '', role: 'member'}, (err,result) => {
                 res.send("<script>alert('회원가입에 성공하였습니다! 로그인해주세요!');  window.location.replace('/login'); </script>");
             })      
-        }
-        
-    })
+        })
+    }
 })
 
 app.get('*', (req,res) => {
