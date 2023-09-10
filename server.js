@@ -130,12 +130,12 @@ app.get('/quiz/manager', ManagerLogined, (req,res) => {
     })
 })
 
-app.get('/list', ManagerLogined, (req,res) => {
-    if(req.query.sort === 'register') {
+app.get('/list/:sort', ManagerLogined, (req,res) => {
+    if(req.params.sort === 'register') {
         db.collection('user').find({role: 'member'}).toArray((err,result) => {
             res.render('list.ejs', {result});
         })
-    } else if(req.query.sort === 'name') {
+    } else if(req.params.sort === 'name') {
         db.collection('user').find({role: 'member'}).toArray((err,result) => {
             result = result.sort((a,b) => {return a.name - b.name});
             res.render('list.ejs', {result});

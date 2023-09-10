@@ -57,7 +57,7 @@
     })
 
     document.querySelector('#register').addEventListener('click', () => {
-      fetch('/list?sort=register')
+      fetch('/list/register')
       .then(() => {
         location.reload();
       })
@@ -67,7 +67,7 @@
     })
 
     document.querySelector('#name').addEventListener('click', () => {
-      fetch('/list?sort=name')
+      fetch('/list/name')
       .then(() => {
         location.reload();
       })
@@ -77,7 +77,7 @@
     })
 
     document.querySelector('#attendance').addEventListener('click', () => {
-      fetch('/list?sort=attendance')
+      fetch('/list/attendance')
       .then(() => {
         location.reload();
       })
