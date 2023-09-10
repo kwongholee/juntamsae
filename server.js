@@ -212,7 +212,7 @@ app.post('/register', (req,res) => {
         createdId = result.hashedPassword;
         db.collection('user').find().toArray((err,result) => {
             result.map((a,i) => {
-                verifyPassword(req.body.studentId, result.salt, result.studentId).then((verified) => {
+                verifyPassword(req.body.studentId, a.salt, a.studentId).then((verified) => {
                     if(!verified) {
                         doublecheck = true;
                         return res.send("<script>alert('이미 사용중인 학번입니다! 관리자에게 연락해주세요!');  window.location.replace('/fail'); </script>");
