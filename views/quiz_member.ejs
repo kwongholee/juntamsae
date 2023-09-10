@@ -9,18 +9,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 <body>
-  <h1>Quiz for Member</h1>
+  <div class="container">
+    <h1>Quiz for <strong>Member</strong></h1>
 
-  <div>
-    <h2>Quiz: <%= result.quiz %></h2>
-  </div>
+    <div>
+      <h2>Quiz: <%= result.quiz %></h2>
+    </div>
 
-  <div>
-    <form action="/quiz/member/answer/<%= user._id %>?_method=PUT" method="POST">
-      <label>Answer</label>
-      <input type="text" placeholder="Answer" name="answer">
-      <button type="submit">제출</button>
-    </form>
+    <div>
+      <form action="/quiz/member/answer/<%= user._id %>?_method=PUT" method="POST">
+        <div>
+          <label>Answer</label>
+          <input type="text" placeholder="Answer" name="answer">
+        </div>
+        <button type="submit" class="btn btn-secondary">제출</button>
+      </form>
+    </div>
   </div>
 </body>
 </html>

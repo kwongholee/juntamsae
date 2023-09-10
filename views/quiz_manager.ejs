@@ -9,17 +9,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 <body>
-  <h1>Quiz for Manager</h1>
+  <div class="container">
+    <h1>Quiz for <strong>Manager</strong></h1>
 
-  <div>
-    <form action="/quiz/manager/commit?_method=PUT" method="POST">
-      <label>Quiz</label>
-      <input type="text" value="<%= result.quiz %>" name="quiz">
-      <button type="submit">등록</button>
-    </form>
+    <div>
+      <form action="/quiz/manager/commit?_method=PUT" method="POST">
+        <label>Quiz</label>
+        <input type="text" value="<%= result.quiz %>" name="quiz">
+        <button type="submit" class="btn btn-secondary">등록</button>
+      </form>
+    </div>
+
+    <button id="list" class="btn btn-danger">list</button>
   </div>
-
-  <button id="list">list</button>
 
   <script>
     document.querySelector('#list').addEventListener('click', () => {

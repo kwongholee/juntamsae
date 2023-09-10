@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 <body>
-  <h1><%= user.name %>'s Profile</h1>
-  <h3>Name: <%= user.name %></h3>
-  <h3>Number of Attendance: <%= user.num %></h3>
-  <h3>Answer of last Quiz: <%= user.answer %></h3>
-  <button id="edit">edit</button>
+  <div class="container">
+    <h1><%= user.name %>'s Profile</h1>
+    <h3>Name: <%= user.name %></h3>
+    <h3>Number of Attendance: <%= user.num %></h3>
+    <h3>Answer of last Quiz: <%= user.answer %></h3>
+    <button id="edit" class="btn btn-secondary">edit</button>
+  </div>
 
   <script>
     document.querySelector('#edit').addEventListener('click', () => {

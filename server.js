@@ -131,9 +131,21 @@ app.get('/quiz/manager', ManagerLogined, (req,res) => {
 })
 
 app.get('/list', ManagerLogined, (req,res) => {
-    db.collection('user').find({role: 'member'}).toArray((err,result) => {
-        res.render('list.ejs', {result});
-    })
+    if(req.query.sort === 'register') {
+        db.collection('user').find({role: 'member'}).toArray((err,result) => {
+            res.render('list.ejs', {result});
+        })
+    } else if(req.query.sort === 'name') {
+        db.collection('user').find({role: 'member'}).toArray((err,result) => {
+            result = result.sort((a,b) => {return a.name - b.name});
+            res.render('list.ejs', {result});
+        })
+    } else {
+        db.collection('user').find({role: 'member'}).toArray((err,result) => {
+            result = result.sort((a,b) => {return a.num - b.num});
+            res.render('list.ejs', {result});
+        })
+    }
 })
 
 app.get('/quiz/member/modification/:id', (req,res) => {

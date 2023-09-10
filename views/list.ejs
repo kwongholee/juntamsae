@@ -9,18 +9,26 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 <body>
-  <h1>Login List for Manager</h1>
+  <div class="container">
+    <h1>Login List for Manager</h1>
 
-  <div>
-    <% for(let i = 0; i < result.length; i++) { %>
+    <div>
       <div>
-        <h3>Name: <%= result[i].name %></h3>
-        <h3>Number of Attendance: <%= result[i].num %></h3>
-        <h3>Answer of last Quiz: <%= result[i].answer %></h3>
-        <button id="plus" data-id="<%= result[i]._id %>">+</button>
-        <button id="minus" data-id="<%= result[i]._id %>">-</button>
+        <button id="register" class="btn btn-secondary">등록 순 나열</button>
+        <button id="name" class="btn btn-danger">이름 순 나열</button>
+        <button id="attendance" class="btn btn-primary">출석 순 나열</button>
       </div>
-    <% } %>
+
+      <% for(let i = 0; i < result.length; i++) { %>
+        <div>
+          <h3>Name: <%= result[i].name %></h3>
+          <h3>Number of Attendance: <%= result[i].num %></h3>
+          <h3>Answer of last Quiz: <%= result[i].answer %></h3>
+          <button id="plus" data-id="<%= result[i]._id %>" class="btn btn-primary">+</button>
+          <button id="minus" data-id="<%= result[i]._id %>" class="btn btn-danger">-</button>
+        </div>
+      <% } %>
+    </div>
   </div>
 
   <script>
@@ -40,6 +48,36 @@
       fetch('/list/answer/false/' + e.target.dataset.id, {
         method: 'PUT',
       })
+      .then(() => {
+        location.reload();
+      })
+      .catch((a,b,c) => {
+        console.log(a,b,c);
+      })
+    })
+
+    document.querySelector('#register').addEventListener('click', () => {
+      fetch('/list?sort=register')
+      .then(() => {
+        location.reload();
+      })
+      .catch((a,b,c) => {
+        console.log(a,b,c);
+      })
+    })
+
+    document.querySelector('#name').addEventListener('click', () => {
+      fetch('/list?sort=name')
+      .then(() => {
+        location.reload();
+      })
+      .catch((a,b,c) => {
+        console.log(a,b,c);
+      })
+    })
+
+    document.querySelector('#attendance').addEventListener('click', () => {
+      fetch('/list?sort=attendance')
       .then(() => {
         location.reload();
       })
