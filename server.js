@@ -32,6 +32,9 @@ function areYouIn205(req,res,next) {
     if(ip in juntamsaeIp) {
         next();
     }
+    else {
+        res.send("<script>alert('205호에서 퀴즈를 제출하여 주세요!!');  window.location.replace('/quiz/member'); </script>")
+    }
 }
 
 var db;
@@ -174,7 +177,7 @@ app.put('/quiz/manager/commit', ManagerLogined, (req,res) => {
     })
 })
 
-app.put('/quiz/member/answer/:id', Logined, (req,res) => {
+app.put('/quiz/member/answer/:id', Logined, areYouIn205, (req,res) => {
     db.collection('user').updateOne({_id: new ObjectId(req.params.id)}, {$set: {answer: req.body.answer}}, (err,result) => {
         res.send("<script>alert('퀴즈의 정답이 제출되었습니다!');  window.location.replace('/profile/" + req.params.id + "'); </script>")
     })
