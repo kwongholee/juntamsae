@@ -208,8 +208,7 @@ app.delete('/list/elimination/all', (req,res) => {
 })
 
 app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}), haveClientId, function(req, res) {
-    const num = generateClientId();
-    res.cookie('clientId', num, {maxAge: 3600000});
+    res.cookie('clientId', req.user.name, {maxAge: 3600000});
     if(req.user.role === 'manager') {
         res.redirect('/quiz/manager');
     } else {
@@ -217,24 +216,13 @@ app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}), ha
     }
 });
 
-function generateClientId() {
-    const length = 20;
-    let randomNum = '';
-  
-    for (let i = 0; i < length; i++) {
-      randomNum += Math.floor(Math.random() * 10);
-    }
-  
-    return randomNum;
-}
-
 function haveClientId(req,res,next) {
     const clientId = req.cookies.clientId;
 
-    if(!clientId) {
+    if(!clientId || clientId == req.user.name) {
         next();
     } else {
-        res.redirect('/');
+        res.send('<script>alert("왜 다른 계정으로 로그인하려고 하세요? ㅎㅎㅎ"); window.location.replace("/login"); </script>');
     }
 }
 
