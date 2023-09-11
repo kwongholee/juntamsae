@@ -13,12 +13,12 @@
     <h3>Login</h3>
     <form action="/login" method="POST">
       <div>
-        <label>Name</label>
-        <input type="text" placeholder="name" name="name">
+        <label>이름</label>
+        <input type="text" placeholder="이름" name="name">
       </div>
       <div>
-        <label>StudentId</label>
-        <input type="password" placeholder="studentId" name="studentId">
+        <label>학번</label>
+        <input type="password" placeholder="학번" name="studentId">
       </div>
       <button type="submit" class="btn btn-primary">로그인</button>
     </form>
@@ -28,12 +28,16 @@
     <h3>Register</h3>
     <form action="/register" method="POST">
       <div>
-        <label>Name</label>
+        <label>이름</label>
         <input type="text" placeholder="name" name="name">
       </div>
       <div>
-        <label>StudentId</label>
-        <input type="password" placeholder="studentId" name="studentId">
+        <label>학번</label>
+        <input type="password" placeholder="학번" name="studentId">
+      </div>
+      <div>
+        <label>학과</label>
+        <input type="text" placeholder="학과" name="subject">
       </div>
       <button type="submit" class="btn btn-primary">회원가입</button>
     </form>

@@ -7,6 +7,7 @@ const { ObjectId } = require('mongodb');
 const util = require('util');
 const crypto = require('crypto');
 const methodOverride = require('method-override');
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const app = express();
 
@@ -16,9 +17,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
 app.use(express.static('public'));
+app.use(cookieParser());
 app.set('view engine', 'ejs');
 
-import isStudentId from './middleware/loginRegex';
+const isStudentId = (v) => {
+    let regex = /^\d{10}$/;
+  
+    return regex.test(v);
+}
+
+function areYouIn205(req,res,next) {
+    const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
+    const juntamsaeIp = ['61.98.214.252','61.98.214.249', '61.98.214.250'];
+    if(ip in juntamsaeIp) {
+        next();
+    }
+}
 
 var db;
 
@@ -31,14 +45,6 @@ MongoClient.connect(process.env.DB_URL, (err, client) => {
       console.log('listening on 8080');
     })
 })
-
-function areYouIn205(req,res,next) {
-    const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
-    const juntamsaeIp = ['61.98.214.252','61.98.214.249'];
-    if(ip in juntamsaeIp) {
-        next();
-    }
-}
 
 const randomBytesPromise = util.promisify(crypto.randomBytes);
 const pbkdf2Promise = util.promisify(crypto.pbkdf2);
@@ -120,7 +126,7 @@ app.get('/profile/:id', Logined, (req,res) => {
     })
 })
 
-app.get('/login', (req,res) => {
+app.get('/login', haveClientId, (req,res) => {
     res.render('login.ejs');
 })
 
@@ -198,13 +204,36 @@ app.delete('/list/elimination/all', (req,res) => {
     })
 })
 
-app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}) ,function(req, res) {
+app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}), haveClientId, function(req, res) {
+    const num = generateClientId();
+    res.cookie('clientId', num, {maxAge: 3600000});
     if(req.user.role === 'manager') {
         res.redirect('/quiz/manager');
     } else {
         res.redirect('/quiz/member');
     }
 });
+
+function generateClientId() {
+    const length = 20;
+    let randomNum = '';
+  
+    for (let i = 0; i < length; i++) {
+      randomNum += Math.floor(Math.random() * 10);
+    }
+  
+    return randomNum;
+}
+
+function haveClientId(req,res,next) {
+    const clientId = req.cookies.clientId;
+
+    if(!clientId) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+}
 
 app.post('/register', (req,res) => {
     if(!isStudentId(req.body.studentId)) {
@@ -214,7 +243,9 @@ app.post('/register', (req,res) => {
         createHashedPassword(req.body.studentId).then((result) => {
             createdSalt = result.salt;
             createdId = result.hashedPassword;
-            db.collection('user').insertOne({name: req.body.name, studentId: createdId, salt: createdSalt, num: 0, answer: '', role: 'member'}, (err,result) => {
+            var date = new Date();
+            date = date.toLocaleString('ko-kr');
+            db.collection('user').insertOne({name: req.body.name, subject: req.body.subject, studentId: createdId, salt: createdSalt, num: 0, answer: '', role: 'member', date: date}, (err,result) => {
                 res.send("<script>alert('회원가입에 성공하였습니다! 로그인해주세요!');  window.location.replace('/login'); </script>");
             })      
         })

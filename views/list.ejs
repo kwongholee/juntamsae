@@ -17,6 +17,7 @@
         <button id="register" class="btn btn-secondary">등록 순 나열</button>
         <button id="name" class="btn btn-danger">이름 순 나열</button>
         <button id="attendance" class="btn btn-primary">출석 순 나열</button>
+        <button id="attendance" class="btn btn-primary">제출시기 순 나열</button>
       </div>
 
       <div>
@@ -25,9 +26,11 @@
 
       <% for(let i = 0; i < result.length; i++) { %>
         <div>
-          <h3>Name: <%= result[i].name %></h3>
-          <h3>Number of Attendance: <%= result[i].num %></h3>
-          <h3>Answer of last Quiz: <%= result[i].answer %></h3>
+          <h3>이름: <%= result[i].name %></h3>
+          <h3>학과: <%= result[i].subject %></h3>
+          <h3>출석수: <%= result[i].num %></h3>
+          <h3>제출한 퀴즈 정답: <%= result[i].answer %></h3>
+          <h3>퀴즈 제출 시기: <%= result[i].date %></h3>
           <button data-id="<%= result[i]._id %>" class="plus btn btn-primary">+</button>
           <button data-id="<%= result[i]._id %>" class="minus btn btn-danger">-</button>
           <button data-id="<%= result[i]._id %>" class="delete btn btn-secondary">삭제</button>

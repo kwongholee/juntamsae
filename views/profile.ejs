@@ -11,10 +11,11 @@
 <body>
   <div class="container">
     <h1><%= user.name %>'s Profile</h1>
-    <h3>Name: <%= user.name %></h3>
-    <h3>Number of Attendance: <%= user.num %></h3>
-    <h3>Answer of last Quiz: <%= user.answer %></h3>
-    <button id="edit" class="btn btn-secondary">edit</button>
+    <h3>이름: <%= user.name %></h3>
+    <h3>학과: <%= user.subject %></h3>
+    <h3>출석수: <%= user.num %></h3>
+    <h3>제출한 퀴즈 정답: <%= user.answer %></h3>
+    <button id="edit" class="btn btn-secondary">퀴즈 답 수정</button>
   </div>
 
   <script>
