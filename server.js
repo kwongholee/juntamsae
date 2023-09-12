@@ -208,10 +208,10 @@ app.delete('/list/elimination/all', (req,res) => {
 })
 
 app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}), haveClientId, function(req, res) {
-    res.cookie('clientId', req.user.name, {maxAge: 3600000});
     if(req.user.role === 'manager') {
         res.redirect('/quiz/manager');
     } else {
+        res.cookie('clientId', req.user.name, {maxAge: 3600000});
         res.redirect('/quiz/member');
     }
 });
@@ -222,7 +222,7 @@ function haveClientId(req,res,next) {
     if(!clientId || clientId == req.user.name) {
         next();
     } else {
-        res.send('<script>alert("왜 다른 계정으로 로그인하려고 하세요? ㅎㅎㅎ"); window.location.replace("/login"); </script>');
+        res.send('<script>alert("왜 다른 계정으로 로그인하려고 하세요? ㅎㅎㅎ"); window.location.replace("/"); </script>');
     }
 }
 
