@@ -28,7 +28,7 @@ const isStudentId = (v) => {
 
 function areYouIn205(req,res,next) {
     const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
-    const juntamsaeIp = ['61.98.214.252','61.98.214.249', '61.98.214.250'];
+    const juntamsaeIp = ['::ffff:10.124.2.2', '::ffff:10.124.1.2'];
     if(ip in juntamsaeIp) {
         next();
     }
