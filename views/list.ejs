@@ -34,6 +34,7 @@
           <h3>출석수: <%= result[i].num %></h3>
           <h3>제출한 퀴즈 정답: <%= result[i].answer %></h3>
           <h3>퀴즈 제출 시기: <%= result[i].date %></h3>
+          <h3>퀴즈 제출 당시 ip: <%= result[i].ip %></h3>
           <button data-id="<%= result[i]._id %>" class="plus btn btn-primary">+</button>
           <button data-id="<%= result[i]._id %>" class="minus btn btn-danger">-</button>
           <button data-id="<%= result[i]._id %>" class="delete btn btn-secondary">삭제</button>

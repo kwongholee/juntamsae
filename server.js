@@ -26,16 +26,16 @@ const isStudentId = (v) => {
     return regex.test(v);
 }
 
-function areYouIn205(req,res,next) {
-    const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
-    const juntamsaeIp = ['61.98.214.252','61.98.214.249', '61.98.214.250'];
-    if(ip in juntamsaeIp) {
-        next();
-    }
-    else {
-        res.send("<script>alert('205호에서 퀴즈를 제출하여 주세요!!');  window.location.replace('/quiz/member'); </script>")
-    }
-}
+// function areYouIn205(req,res,next) {
+//     const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
+//     const juntamsaeIp = ['61.98.214.252','61.98.214.249', '61.98.214.250'];
+//     if(ip in juntamsaeIp) {
+//         next();
+//     }
+//     else {
+//         res.send("<script>alert('205호에서 퀴즈를 제출하여 주세요!!');  window.location.replace('/quiz/member'); </script>")
+//     }
+// }
 
 var db;
 
@@ -178,8 +178,9 @@ app.put('/quiz/manager/commit', ManagerLogined, (req,res) => {
     })
 })
 
-app.put('/quiz/member/answer/:id', Logined, areYouIn205, (req,res) => {
-    db.collection('user').updateOne({_id: new ObjectId(req.params.id)}, {$set: {answer: req.body.answer}}, (err,result) => {
+app.put('/quiz/member/answer/:id', Logined, (req,res) => {
+    const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
+    db.collection('user').updateOne({_id: new ObjectId(req.params.id)}, {$set: {answer: req.body.answer, ip: ip}}, (err,result) => {
         res.send("<script>alert('퀴즈의 정답이 제출되었습니다!');  window.location.replace('/profile/" + req.params.id + "'); </script>")
     })
 })
@@ -237,7 +238,7 @@ app.post('/register', (req,res) => {
             createdId = result.hashedPassword;
             var date = new Date();
             date = date.toLocaleString('ko-kr');
-            db.collection('user').insertOne({name: req.body.name, subject: req.body.subject, studentId: createdId, salt: createdSalt, num: 0, answer: '', role: 'member', date: date}, (err,result) => {
+            db.collection('user').insertOne({name: req.body.name, subject: req.body.subject, studentId: createdId, salt: createdSalt, num: 0, answer: '', role: 'member', date: date, ip: ''}, (err,result) => {
                 res.send("<script>alert('회원가입에 성공하였습니다! 로그인해주세요!');  window.location.replace('/login'); </script>");
             })      
         })
