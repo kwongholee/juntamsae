@@ -116,7 +116,8 @@ function ManagerLogined(req,res,next) {
 }
 
 app.get('/', (req,res) => {
-    res.render('main.ejs');
+    const ip = req.connection.remoteAddress || req.headers['x-forwarded-for'];
+    res.render('main.ejs', {ip: ip});
 })
 
 app.get('/fail', (req,res) => {
