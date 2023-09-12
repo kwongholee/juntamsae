@@ -130,7 +130,7 @@ app.get('/profile/:id', Logined, (req,res) => {
     })
 })
 
-app.get('/login', haveClientId, (req,res) => {
+app.get('/login', (req,res) => {
     res.render('login.ejs');
 })
 
@@ -220,7 +220,7 @@ app.post('/login',passport.authenticate('local', {failureRedirect: '/fail'}), ha
 function haveClientId(req,res,next) {
     const clientId = req.cookies.clientId;
 
-    if(!clientId || clientId == req.user.name) {
+    if(!clientId || !req.user || clientId == req.user.name) {
         next();
     } else {
         res.send('<script>alert("왜 다른 계정으로 로그인하려고 하세요? ㅎㅎㅎ"); window.location.replace("/"); </script>');

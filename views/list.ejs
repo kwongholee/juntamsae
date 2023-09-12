@@ -10,7 +10,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>Login List for Manager</h1>
+    <div>
+      <h1>Login List for Manager</h1>
+      <button style="float: right" id="reload" class="btn btn-secondary">새로고침</button>
+    </div>
 
     <div>
       <div>
@@ -40,6 +43,10 @@
   </div>
 
   <script>
+    document.querySelector('#reload').addEventListener('click', () => {
+      window.location.reload();
+    })
+
     $('.plus').click((e) => {
       fetch('/list/answer/true/' + e.target.dataset.id, {
         method: 'PUT',
